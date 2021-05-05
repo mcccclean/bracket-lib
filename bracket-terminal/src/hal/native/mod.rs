@@ -56,6 +56,8 @@ pub struct InitHints {
     pub srgb: bool,
     pub frame_sleep_time: Option<f32>,
     pub resize_scaling: bool,
+    pub allow_resize: bool,
+    pub centered: bool,
 }
 
 impl InitHints {
@@ -69,22 +71,15 @@ impl InitHints {
             srgb: true,
             frame_sleep_time: None,
             resize_scaling: false,
+            allow_resize: true,
+            centered: false,
         }
     }
 }
 
 impl Default for InitHints {
     fn default() -> Self {
-        Self {
-            vsync: true,
-            fullscreen: false,
-            gl_version: glutin::GlRequest::Latest,
-            gl_profile: glutin::GlProfile::Core,
-            hardware_acceleration: true,
-            srgb: true,
-            frame_sleep_time: None,
-            resize_scaling: false,
-        }
+        Self::new()
     }
 }
 

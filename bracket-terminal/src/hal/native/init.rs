@@ -14,6 +14,7 @@ pub fn init_raw<S: ToString>(
     let el = EventLoop::new();
     let wb = WindowBuilder::new()
         .with_title(window_title.to_string())
+        .with_resizable(platform_hints.allow_resize)
         .with_inner_size(LogicalSize::new(
             f64::from(width_pixels),
             f64::from(height_pixels),
@@ -34,6 +35,16 @@ pub fn init_raw<S: ToString>(
                 .set_fullscreen(Some(glutin::window::Fullscreen::Borderless(Some(mh))));
         } else {
             return Err("No available monitor found".into());
+        }
+    } else if platform_hints.centered {
+        // center on screen
+        let window = windowed_context.window();
+        let win_size = window.outer_size();
+        if let Some(monitor) = window.current_monitor() {
+            let monitor_size = monitor.size();
+            let margin_w = monitor_size.width - win_size.width;
+            let margin_h = monitor_size.height - win_size.height;
+            window.set_outer_position(glutin::dpi::LogicalPosition::new(margin_w / 2, margin_h / 2));
         }
     }
 
