@@ -48,6 +48,13 @@ pub fn init_raw<S: ToString>(
         }
     }
 
+    if let Some((pixels, w, h)) = platform_hints.icon {
+        if let Ok(icon) = glutin::window::Icon::from_rgba(pixels, w, h) {
+            let window = windowed_context.window();
+            window.set_window_icon(Some(icon));
+        }
+    }
+
     let gl = glow::Context::from_loader_function(|ptr| {
         windowed_context.get_proc_address(ptr) as *const _
     });

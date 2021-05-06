@@ -58,6 +58,7 @@ pub struct InitHints {
     pub resize_scaling: bool,
     pub allow_resize: bool,
     pub centered: bool,
+    pub icon: Option<(Vec<u8>, u32, u32)>,
 }
 
 impl InitHints {
@@ -73,6 +74,7 @@ impl InitHints {
             resize_scaling: false,
             allow_resize: true,
             centered: false,
+            icon: None,
         }
     }
 }
