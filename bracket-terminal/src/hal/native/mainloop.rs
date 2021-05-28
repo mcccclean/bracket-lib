@@ -26,17 +26,41 @@ fn on_resize(
             be.resize_scaling,
         );
     }
+    
     let gl = be.gl.as_ref().unwrap();
-    unsafe {
-        gl_error_wrap!(
-            gl,
-            gl.viewport(
-                0,
-                0,
-                physical_size.width as i32,
-                physical_size.height as i32,
-            )
-        );
+    
+    let centered = true;
+    if centered {
+        // TODO: read dimensions from console
+        let width = 80;
+        let height = 60;
+        let tile_size = 16;
+        let pixel_w = (width * tile_size) as i32;
+        let pixel_h = (height * tile_size) as i32;
+        let gl = be.gl.as_ref().unwrap();
+        unsafe {
+            gl_error_wrap!(
+                gl,
+                gl.viewport(
+                    (physical_size.width as i32 - pixel_w) / 2,
+                    (physical_size.height as i32 - pixel_h) / 2,
+                    pixel_w,
+                    pixel_h,
+                )
+            );
+        }
+    } else {
+        unsafe {
+            gl_error_wrap!(
+                gl,
+                gl.viewport(
+                    0,
+                    0,
+                    physical_size.width as i32,
+                    physical_size.height as i32,
+                )
+            );
+        }
     }
     let new_fb =
         Framebuffer::build_fbo(gl, physical_size.width as i32, physical_size.height as i32)?;
