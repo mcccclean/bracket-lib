@@ -189,7 +189,21 @@ pub fn main_loop<GS: GameState>(mut bterm: BTerm, mut gamestate: GS) -> BResult<
                     bterm.on_event(BEvent::Focused { focused: *focused });
                 }
                 WindowEvent::CursorMoved { position: pos, .. } => {
-                    bterm.on_mouse_position(pos.x, pos.y);
+                    let width = 80;
+                    let height = 60;
+                    let tile_size = 16;
+                    let pixel_w = (width * tile_size) as f64;
+                    let pixel_h = (height * tile_size) as f64;
+                    let physical_size = wc.window().inner_size();
+                    let offset_x = (physical_size.width as f64 - pixel_w) / 2.0;
+                    let offset_y = (physical_size.height as f64 - pixel_h) / 2.0;
+                    let left = pos.x - offset_x as f64;
+                    let top = pos.y - offset_y as f64;
+                    let ratio_w = physical_size.width as f64 / pixel_w;
+                    let ratio_h = physical_size.height as f64 / pixel_h;
+                    if left >= 0.0 && left < pixel_w && top > 0.0 && top < pixel_h {
+                        bterm.on_mouse_position(left * ratio_w, top * ratio_h);
+                    }
                 }
                 WindowEvent::CursorEntered { .. } => bterm.on_event(BEvent::CursorEntered),
                 WindowEvent::CursorLeft { .. } => bterm.on_event(BEvent::CursorLeft),
